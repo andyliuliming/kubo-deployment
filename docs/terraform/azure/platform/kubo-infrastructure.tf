@@ -1,5 +1,3 @@
-
-
 variable "subscription_id" {}
 
 variable "tenant_id" {}
@@ -9,39 +7,52 @@ variable "client_id" {}
 variable "client_secret" {}
 
 variable "latest_ubuntu" {
-    type = "map"
-    default = {
+  type = "map"
+
+  default = {
     publisher = "Canonical"
     offer     = "UbuntuServer"
     sku       = "14.04.5-LTS"
     version   = "latest"
-    }
+  }
 }
 
 variable "ssh_user_username" {
-   type = "string"
-   default = "ubuntu"
+  type    = "string"
+  default = "ubuntu"
 }
 
 variable "ssh_private_key_filename" {
-    type = "string"
+  type = "string"
 }
 
 variable "ssh_public_key_filename" {
-   type = "string"
+  type = "string"
 }
 
 variable "location" {
-    type = "string"
-    default = "eastus2"
+  type    = "string"
+  default = "eastus2"
 }
 
 variable "prefix" {
-    type = "string"
+  type = "string"
 }
 
 variable "network_cidr" {
   default = "10.0.0.0/16"
+}
+
+variable "allow_privileged_containers" {
+  type        = "string"
+  default     = "true"
+  description = "true or false"
+}
+
+variable "disable_deny_escalating_exec" {
+  type        = "string"
+  default     = "true"
+  description = "true or false"
 }
 
 provider "azurerm" {
@@ -63,7 +74,7 @@ resource "azurerm_resource_group" "bosh" {
 resource "azurerm_public_ip" "bosh-bastion" {
   name                         = "${var.prefix}-cfcr-ip"
   location                     = "${var.location}"
-  depends_on  = ["azurerm_resource_group.bosh"]
+  depends_on                   = ["azurerm_resource_group.bosh"]
   resource_group_name          = "${azurerm_resource_group.bosh.name}"
   public_ip_address_allocation = "static"
 
@@ -74,33 +85,31 @@ resource "azurerm_public_ip" "bosh-bastion" {
 
 // Subnet for CFCR
 resource "azurerm_virtual_network" "cfcr-vnet" {
-  name          = "${var.prefix}-cfcr-vnet"
-  location      = "${var.location}"
-  depends_on  = ["azurerm_resource_group.bosh"]
+  name       = "${var.prefix}-cfcr-vnet"
+  location   = "${var.location}"
+  depends_on = ["azurerm_resource_group.bosh"]
 
   resource_group_name = "${azurerm_resource_group.bosh.name}"
-  address_space = ["${var.network_cidr}"]
-  dns_servers   = ["168.63.129.16"]
- 
+  address_space       = ["${var.network_cidr}"]
 }
 
 resource "azurerm_subnet" "cfcr-subnet" {
-    name = "cfcr-subnet" 
-    depends_on  = ["azurerm_virtual_network.cfcr-vnet"]
+  name       = "cfcr-subnet"
+  depends_on = ["azurerm_virtual_network.cfcr-vnet"]
 
-    resource_group_name = "${azurerm_resource_group.bosh.name}"
-    virtual_network_name = "${azurerm_virtual_network.cfcr-vnet.name}"
-    address_prefix = "${cidrsubnet(var.network_cidr, 8, 0)}"
+  resource_group_name  = "${azurerm_resource_group.bosh.name}"
+  virtual_network_name = "${azurerm_virtual_network.cfcr-vnet.name}"
+  address_prefix       = "${cidrsubnet(var.network_cidr, 8, 0)}"
 }
-
 
 // Allow SSH to BOSH bastion
 resource "azurerm_network_security_group" "bosh-bastion" {
-  name    = "${var.prefix}bosh-bastion"
-  location      = "${var.location}"
+  name                = "${var.prefix}bosh-bastion"
+  location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.bosh.name}"
-  depends_on  = ["azurerm_resource_group.bosh"]
- security_rule {
+  depends_on          = ["azurerm_resource_group.bosh"]
+
+  security_rule {
     name                       = "ssh"
     priority                   = 100
     direction                  = "Inbound"
@@ -115,11 +124,12 @@ resource "azurerm_network_security_group" "bosh-bastion" {
 
 // Allow port 8443 to master
 resource "azurerm_network_security_group" "cfcr-master" {
-  name    = "${var.prefix}cfcr-master"
-  location      = "${var.location}"
+  name                = "${var.prefix}cfcr-master"
+  location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.bosh.name}"
-  depends_on  = ["azurerm_resource_group.bosh"]
- security_rule {
+  depends_on          = ["azurerm_resource_group.bosh"]
+
+  security_rule {
     name                       = "master"
     priority                   = 100
     direction                  = "Inbound"
@@ -131,7 +141,6 @@ resource "azurerm_network_security_group" "cfcr-master" {
     destination_address_prefix = "*"
   }
 }
-
 
 // BOSH bastion host
 
@@ -151,14 +160,13 @@ resource "azurerm_network_interface" "bosh-bastion" {
   }
 }
 
-
 resource "azurerm_virtual_machine" "bosh-bastion" {
-  name         = "${var.prefix}bosh-bastion"
-  depends_on   = ["azurerm_network_interface.bosh-bastion"]
-  vm_size      = "Standard_D2_V2"
-  location      = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.bosh.name}"
-  network_interface_ids = ["${azurerm_network_interface.bosh-bastion.id}"]
+  name                    = "${var.prefix}bosh-bastion"
+  depends_on              = ["azurerm_network_interface.bosh-bastion"]
+  vm_size                 = "Standard_D2_V2"
+  location                = "${var.location}"
+  resource_group_name     = "${azurerm_resource_group.bosh.name}"
+  network_interface_ids   = ["${azurerm_network_interface.bosh-bastion.id}"]
   storage_image_reference = ["${var.latest_ubuntu}"]
 
   storage_os_disk {
@@ -166,20 +174,22 @@ resource "azurerm_virtual_machine" "bosh-bastion" {
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
-    disk_size_gb = "100"
+    disk_size_gb      = "100"
   }
 
   os_profile_linux_config {
     disable_password_authentication = true
+
     ssh_keys = [{
       path     = "/home/${var.ssh_user_username}/.ssh/authorized_keys"
       key_data = "${file(var.ssh_public_key_filename)}"
     }]
   }
 
-   os_profile {
-    computer_name = "bosh-bastion"
+  os_profile {
+    computer_name  = "bosh-bastion"
     admin_username = "${var.ssh_user_username}"
+
     custom_data = <<EOT
 #!/bin/bash
 cat > /etc/motd <<EOF
@@ -238,6 +248,10 @@ sed -i -e 's/^\(vnet_name:\).*\(#.*\)/\1 ${azurerm_virtual_network.cfcr-vnet.nam
 sed -i -e 's/^\(subnet_name:\).*\(#.*\)/\1 ${azurerm_subnet.cfcr-subnet.name} \2/' "$1"
 sed -i -e 's/^\(location:\).*\(#.*\)/\1 ${var.location} \2/' "$1"
 sed -i -e 's/^\(default_security_group:\).*\(#.*\)/\1 ${azurerm_network_security_group.cfcr-master.name} \2/' "$1"
+sed -i -e 's/^\(master_vm_type:\).*\(#.*\)/\1 'master' \2/' "$1"
+sed -i -e 's/^\(worker_vm_type:\).*\(#.*\)/\1 'worker' \2/' "$1"
+sed -i -e 's/^\(allow_privileged_containers:\).*\(#.*\)/\1 ${var.allow_privileged_containers} \2/' "$1"
+sed -i -e 's/^\(disable_deny_escalating_exec:\).*\(#.*\)/\1 ${var.disable_deny_escalating_exec} \2/' "$1"
 
 # Generic updates
 sed -i -e 's/^\(internal_ip:\).*\(#.*\)/\1 ${cidrhost(azurerm_subnet.cfcr-subnet.address_prefix, 5)} \2/' "$1"
@@ -285,7 +299,7 @@ EOF
 chmod a+x /usr/bin/set_iaas_routing
 
 # Get kubo-deployment
-wget https://s3.amazonaws.com/scharlton-piv/kubo-deployment-latest.tgz
+wget https://opensourcerelease.blob.core.windows.net/alphareleases/kubo-deployment-latest.tgz
 mkdir /share
 tar -xvf kubo-deployment-latest.tgz -C /share
 chmod -R 777 /share
@@ -305,10 +319,9 @@ chmod a+x credhub
 sudo mv credhub /usr/bin
 
 EOT
- }
+  }
 }
 
 output "kubo_subnet" {
-   value = "${azurerm_subnet.cfcr-subnet.name}"
+  value = "${azurerm_subnet.cfcr-subnet.name}"
 }
-            
