@@ -1,4 +1,6 @@
 .DS_Store
+bin/go-outline
+bin/gopkgs
 pkg
 !/src/kubo-deployment-tests/resources/environments/test_gcp_with_creds/creds.yml
 *.iml

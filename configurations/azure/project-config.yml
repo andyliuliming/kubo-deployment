@@ -14,4 +14,6 @@ routing_mode: iaas
 kubernetes_master_host: # IP address that can be used to reach the Kubernetes API, usually the address of a load balancer or static IP
 kubernetes_master_port: 8443 # Port for the K8S API
 master_target_pool: #  Azure load balancer name that master nodes will be a part of
+master_vm_type: # vm type for master node
+worker_vm_type: # vm type for worker node
 

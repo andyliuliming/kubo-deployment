@@ -222,6 +222,8 @@ generate_manifest() {
     if ! bosh int "${director_path}" --path='/vcenter_rp' &>/dev/null; then
       interpolate_arguments+=" --ops-file=\"${ops_dir}/iaas/vsphere/set-working-dir-no-rp.yml\""
     fi
+  elif [[ "azure" == "${iaas}" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/vm-types.yml\""
   fi
 
   if [[ -z "$existing_deployment" ]]; then
