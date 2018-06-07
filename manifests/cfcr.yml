@@ -12,9 +12,9 @@ releases:
   sha1: f192296243e68150ae66656fc9134a2b2a023184
   version: 32.0.0
 - name: bosh-dns
-  sha1: 66e74bb601b691ea4836f859c556de8a5c6c1264
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.5.0
-  version: 1.5.0
+  sha1: 5af2cff7b0502473a534b894c65dfb5127e9911e
+  url: https://opensourcerelease.blob.core.windows.net/internalreleases/bosh-dns-release.tgz
+  version: 1.6.0
 - name: bpm
   sha1: 4f0f239abdc801d71de9063625aa56e3c42634b5
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.6.0
@@ -47,6 +47,7 @@ addons:
           tls: ((/dns_healthcheck_server_tls))
         client:
           tls: ((/dns_healthcheck_client_tls))
+      agent_alias_enabled: true
 - name: bosh-dns-aliases
   jobs:
   - name: kubo-dns-aliases
@@ -142,12 +143,6 @@ instance_groups:
           ca: ((tls-etcd-v0-17-0.ca))
           certificate: ((tls-etcd-v0-17-0.certificate))
           private_key: ((tls-etcd-v0-17-0.private_key))
-  - name: node-dns-aliases
-    release: kubo
-    properties:
-      tls:
-        kubernetes: ((tls-kubernetes))
-      api-token: ((kube-scheduler-password))
   - name: smoke-tests
     release: kubo
   stemcell: trusty
@@ -196,12 +191,6 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
       api-token: ((kube-proxy-password))
-  - name: node-dns-aliases
-    release: kubo
-    properties:
-      tls:
-        kubernetes: ((tls-kubernetes))
-      api-token: ((kube-scheduler-password))
   stemcell: trusty
   vm_type: small-highmem
   persistent_disk: 10240

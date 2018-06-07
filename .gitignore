@@ -7,3 +7,4 @@ pkg
 *.terraform
 *.tfstate
 *.backup
+src/github.com/uudashr/gopkgs

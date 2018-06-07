@@ -38,6 +38,7 @@ addons:
           tls: ((/dns_healthcheck_server_tls))
         client:
           tls: ((/dns_healthcheck_client_tls))
+      agent_alias_enabled: true
 - name: bosh-dns-aliases
   jobs:
   - name: kubo-dns-aliases

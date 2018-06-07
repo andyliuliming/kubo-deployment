@@ -249,11 +249,14 @@ generate_manifest() {
     interpolate_arguments+=" --ops-file=\"${ops_dir}/add-oidc-endpoint.yml\""
   fi
 
+  if [[ ! "azure" == "${iaas}" ]]; then
+    interpolate_arguments+=" --ops-file=\"${ops_dir}/use-runtime-config-bosh-dns.yml\""
+  fi
+
   set +x
   local manifest=$(bosh int <(echo "${manifest}") --ops-file="${ops_dir}/misc/dev.yml" \
     --ops-file="${ops_dir}/misc/bootstrap.yml" \
     --ops-file="${ops_dir}/misc/single-master.yml" \
-    --ops-file="${ops_dir}/use-runtime-config-bosh-dns.yml" \
     --vars-file="${director_path}" \
     --var deployment_name="${deployment_name}" \
     --var director_uuid="${director_uuid}" \
