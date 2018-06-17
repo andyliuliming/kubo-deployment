@@ -1,12 +1,12 @@
 - type: replace
   path: /vm_types/name=minimal/cloud_properties/instance_type
-  value: Standard_D1_V2
+  value: Basic_A1
 - type: replace
   path: /vm_types/name=master/cloud_properties/instance_type
-  value: Standard_D1_V2
+  value: Basic_A1
 - type: replace
   path: /vm_types/name=worker/cloud_properties/instance_type
-  value: Standard_D1_V2
+  value: Basic_A1
 
 - type: replace
   path: /vm_types/name=worker/cloud_properties/root_disk/size
