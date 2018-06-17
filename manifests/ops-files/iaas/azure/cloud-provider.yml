@@ -64,7 +64,7 @@
           subnet-name: ((subnet_name))
           network-security-group-name: ((default_security_group))
           availability-set: ((prefix))-worker
-
+          prv_dns_name: ((prv-dns-name))
     provides:
       cloud-provider: {as: worker-cloud-provider}
 
