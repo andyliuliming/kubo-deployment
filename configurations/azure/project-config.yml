@@ -9,6 +9,7 @@ disable_deny_escalating_exec: # Whether we should disable deny escalating exec.
 azure_cloud_name: AzurePublicCloud # can also be AzureUSGovernmentCloud, AzureChinaCloud, or AzureGermanCloud. 
 dns_recursor_ip: 168.63.129.16
 prefix: cfcr # unique prefix for availability sets
+prv_dns_name: # private dns zone name
 
 # IaaS routing mode settings
 # Comment out this section when using CF routing mode
