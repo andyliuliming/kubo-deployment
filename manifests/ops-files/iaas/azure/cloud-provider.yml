@@ -80,9 +80,3 @@
 - type: replace
   path: /instance_groups/name=worker/jobs/name=kube-proxy/properties/cloud-provider?
   value: azure
-
-- type: replace
-  path: /instance_groups/name=worker/jobs/-
-  value:
-    name: cifs-utils
-    release: kubo
