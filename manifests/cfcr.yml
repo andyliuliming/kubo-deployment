@@ -21,15 +21,15 @@ releases:
   version: 0.6.0
 
 stemcells:
-- alias: xenial
-  os: ubuntu-xenial
-  version: "1234.67"
+- alias: trusty
+  os: ubuntu-trusty
+  version: "3586.16"
 
 addons:
 - name: bosh-dns
   include:
     stemcells:
-    - os: ubuntu-xenial
+    - os: ubuntu-trusty
   jobs:
   - name: bosh-dns
     release: bosh-dns
@@ -71,7 +71,7 @@ instance_groups:
         heapster: ((tls-heapster))
         influxdb: ((tls-influxdb))
         kubernetes-dashboard: ((tls-kubernetes-dashboard))
-  stemcell: xenial
+  stemcell: trusty
   vm_type: minimal
 - name: master
   instances: 3
@@ -145,7 +145,7 @@ instance_groups:
           private_key: ((tls-etcd-v0-17-0.private_key))
   - name: smoke-tests
     release: kubo
-  stemcell: xenial
+  stemcell: trusty
   vm_type: small
   persistent_disk: 5120
 
@@ -191,7 +191,7 @@ instance_groups:
       tls:
         kubernetes: ((tls-kubernetes))
       api-token: ((kube-proxy-password))
-  stemcell: xenial
+  stemcell: trusty
   vm_type: small-highmem
   persistent_disk: 10240
 
