@@ -22,9 +22,9 @@ variable "ssh_user_username" {
   default = "ubuntu"
 }
 
-variable "ssh_private_key_filename" {
-  type = "string"
-}
+# variable "ssh_private_key_filename" {
+#   type = "string"
+# }
 
 variable "ssh_public_key_filename" {
   type = "string"
