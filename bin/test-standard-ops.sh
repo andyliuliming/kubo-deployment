@@ -20,6 +20,7 @@ test_standard_ops() {
       check_interpolation "use-runtime-config-bosh-dns.yml"
       check_interpolation "rename.yml" "-v deployment_name=fubar"
       check_interpolation "vm-types.yml" "-v master_vm_type=master" "-v worker_vm_type=worker"
+      check_interpolation "use-xenial-stemcell.yml"
 
       # Infrastructure
       check_interpolation "iaas/aws/cloud-provider.yml"
@@ -34,6 +35,7 @@ test_standard_ops() {
       check_interpolation "iaas/vsphere/cloud-provider.yml" "-l example-vars-files/iaas/vsphere/cloud-provider.yml"
       check_interpolation "iaas/vsphere/cloud-provider.yml" "-o iaas/vsphere/set-working-dir-no-rp.yml" "-l example-vars-files/iaas/vsphere/set-working-dir-no-rp.yml"
       check_interpolation "iaas/vsphere/master-static-ip.yml" "-v kubernetes_master_host=10.11.12.13"
+      check_interpolation "iaas/virtualbox/bosh-lite.yml"
 
       # Routing Variations
       check_interpolation "cf-routing.yml" "-l example-vars-files/cf-routing.yml"
@@ -48,6 +50,10 @@ test_standard_ops() {
       check_interpolation "disable-anonymous-auth.yml"
       check_interpolation "disable-deny-escalating-exec.yml"
       check_interpolation "add-oidc-endpoint.yml" "-l example-vars-files/misc/oidc.yml"
+      check_interpolation "change-cidrs.yml" "-l example-vars-files/new-cidrs.yml"
+
+      # BBR
+      check_interpolation "enable-bbr.yml"
 
       # Dev
       check_interpolation "kubo-local-release.yml"

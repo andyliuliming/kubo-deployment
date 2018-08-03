@@ -104,7 +104,7 @@ routing_cf_api_url: https://api.system.mycompany.com
 routing_cf_uaa_url: https://uaa.system.mycompany.com
 routing_cf_app_domain_name: apps.mycompany.com
 routing_cf_client_id: routing_api_client
-routing_cf_client-secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
+routing_cf_client_secret: <<credhub get -n my-bosh/cf/uaa_clients_routing_api_client_secret>>
 routing_cf_nats_internal_ips: [10.10.1.6,10.10.1.7,10.10.1.8]
 routing_cf_nats_port: 4222
 routing_cf_nats_username: nats
@@ -187,6 +187,7 @@ kubectl get all
 
 | Name | Purpose | Notes |
 |:---  |:---     |:---   |
+| [`ops-files/use-xenial-stemcell.yml`](ops-files/use-xenial-stemcell.yml) | (Experimental) Use xenial stemcell |  |
 | [`ops-files/use-runtime-config-bosh-dns.yml`](ops-files/use-runtime-config-bosh-dns.yml) | Delegate `bosh-dns` addon to BOSH runtime config | Apply this operator file if your BOSH environment has a runtime config that adds the `bosh-dns` job to all instances. By default, `cfcr.yml` will add `bosh-dns` to deployment instances. |
 | [`ops-files/rename.yml`](ops-files/rename.yml) | Specify the deployment name | The deployment name is also used for etcd certificates. |
 | [`ops-files/vm-types.yml`](ops-files/vm-types.yml) | Specify the `vm_type` for `master` and `worker` instances | By default, `master` and `worker` instances assume `vm_type: small` and `vm_type: small-highmem`, respectively (`vm_types` that are also assumed to exists by https://github.com/cloudfoundry/cf-deployment manifests). You may want to use bespoke `vm_types` so as to scale them, tag them, or apply unique `cloud_properties` independently of other deployments in the same BOSH environment. |
@@ -221,7 +222,8 @@ kubectl get all
 | **vSphere** | | |
 | [`ops-files/iaas/vsphere/cloud-provider.yml`](ops-files/iaas/vsphere/cloud-provider.yml) | Enable Cloud Provider for vSphere | - |
 | [`ops-files/iaas/vsphere/set-working-dir-no-rp.yml`](ops-files/iaas/vsphere/set-working-dir-no-rp.yml) | Configure vSphere cloud provider's working dir if there is no resource pool | - |
-
+| **virtualbox** | | |
+| [`ops-files/iaas/virtualbox/bosh-lite.yml`](ops-files/iaas/virtualbox/bosh-lite.yml) | Enables CFCR to run on a virtualbox bosh-lite environment | Deploys 1 master and 3 workers. Master is deployed to a static ip: 10.244.0.34 |
 
 ### Proxy
 
@@ -238,6 +240,13 @@ kubectl get all
 | [`ops-files/disable-anonymous-auth.yml`](ops-files/disable-anonymous-auth.yml) | Disable `anonymous-auth` on the API server | - |
 | [`ops-files/disable-deny-escalating-exec.yml`](ops-files/disable-deny-escalating-exec.yml) | Disable `DenyEscalatingExec` in API server admission control | - |
 | [`ops-files/add-oidc-endpoint.yml`](ops-files/add-oidc-endpoint.yml) | Enable OIDC authentication for the Kubernetes cluster | - |
+| [`ops-files/change-cidrs.yml`](ops-files/change-cidrs.yml) | Change POD CIDR and Service Cluster CIDR. This should only be applied to a new cluster, please do not apply to an existing cluster. | Extra Vars Required:<br>- **first_ip_of_service_cluster_cidr:** Required for TLS certificate of apiserver<br>- **kubedns_service_ip**: Required for kube dns IP address, needs to be part of service_cluster_cidr |
+
+### BOSH Backup & Restore (Experimental)
+
+| Name | Purpose | Notes|
+|:--- |:--- |:--- |
+| [`ops-files/enable-bbr.yml`](ops-files/enable-bbr.yml) | Deploy jobs required to enable BBR. | Only tested with single master. |
 
 ### Dev
 
