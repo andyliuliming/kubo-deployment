@@ -18,7 +18,7 @@
           vnet-name: ((vnet_name))
           subnet-name: ((subnet_name))
           network-security-group-name: ((default_security_group))
-          availability-set: ((prefix))-worker
+          availability-set: ((primary_availability_set))
 
     provides:
       cloud-provider: {as: master-cloud-provider}
@@ -63,7 +63,7 @@
           vnet-name: ((vnet_name))
           subnet-name: ((subnet_name))
           network-security-group-name: ((default_security_group))
-          availability-set: ((prefix))-worker
+          availability-set: ((primary_availability_set))
     provides:
       cloud-provider: {as: worker-cloud-provider}
 

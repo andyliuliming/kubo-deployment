@@ -1,13 +1,9 @@
 - type: replace
-  path: /vm_types/name=minimal/cloud_properties/instance_type
-  value: Standard_A1_v2
+  path: /instance_groups/name=apply-addons/vm_type
+  value: minimal
 - type: replace
-  path: /vm_types/name=master/cloud_properties/instance_type
-  value: Standard_A1_v2
+  path: /instance_groups/name=master/vm_type
+  value: minimal
 - type: replace
-  path: /vm_types/name=worker/cloud_properties/instance_type
-  value: Standard_A1_v2
-
-- type: replace
-  path: /vm_types/name=worker/cloud_properties/root_disk/size
-  value: 51200
+  path: /instance_groups/name=worker/vm_type
+  value: minimal

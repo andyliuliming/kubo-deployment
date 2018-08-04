@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 #@IgnoreInspection BashAddShebang
 # vim: set ft=sh
 
